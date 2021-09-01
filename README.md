@@ -9,4 +9,8 @@ This is a simple workflow that extracts Formula 1 (I like F1) news articles usin
    - https://newsapi.org/docs
 
 2. Working with Airflow XComs
+
    - https://www.youtube.com/watch?v=8veO7-SN5ZY
+
+3. Working with Airflow Variables
+   - https://airflow.apache.org/docs/apache-airflow/stable/concepts/variables.html
