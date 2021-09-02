@@ -20,10 +20,8 @@ def get_articles(ti):
 
 
 def send_teams_alert(ti):
-    message = ""
 
     webhook_url = Variable.get("teams_webhook_url")
-
     articles = ti.xcom_pull(key="articles", task_ids=["get_articles"])[0]
 
     message = ""
