@@ -2,16 +2,16 @@ import requests
 from datetime import datetime
 from airflow.models import Variable
 
+today = datetime.today()
+today = today.strftime("%Y-%m-%d")
+
 
 def get_articles(ti):
 
-    today = datetime.today()
-    today = today.strftime("%Y-%m-%d")
-
     api_key = Variable.get("news_api_key")
     url = "https://newsapi.org/v2/everything"
-    params = {"q": "(formula 1 OR f1)", "language": "en",
-              "from_data": today, "apiKey": api_key}
+    params = {"qInTitle": '(f1 OR "formula 1" OR "formula one")', "language": "en",
+              "from": today, "apiKey": api_key}
 
     response = requests.get(url, params=params)
     articles = response.json()["articles"]
@@ -26,12 +26,17 @@ def send_teams_alert(ti):
 
     articles = ti.xcom_pull(key="articles", task_ids=["get_articles"])[0]
 
-    for article in articles:
-        title = article["title"]
-        article_url = article["url"]
-        message += f"Title: {title} \n URL: {article_url} \n"
+    message = ""
+    title = f"New F1 Articles for {today}"
+
+    for i in range(len(articles)):
+        curr_title = articles[i]["title"]
+        curr_url = articles[i]["url"]
+
+        message += f"{i+1}. **Title:** {curr_title} **URL:** {curr_url}\r"
 
     payload = {
+        "title": title,
         "text": message
     }
 
